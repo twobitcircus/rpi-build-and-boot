@@ -40,7 +40,7 @@ The NFS root with which you're booting the Pi lives in the image.img file.  You 
 
 ## Create the virtual machine
 
-1. Configure a _wired ethernet_ network.  I use a USB Ethernet adapter on my Macbook.  Set the IP/netmask of the wired connection to `10.0.0.2/255.0.0.0`.
+1. Configure a _wired ethernet_ network.  I use a USB Ethernet adapter on my Macbook.  Set the IP/netmask of the wired connection to `10.0.0.2/255.0.0.0`.  The IP address of the virtual machine is hard-coded to `10.0.0.1`.
 1. Type `vagrant up`.  It will probably ask you to select the network interface to bridge to.  Select your wired connection.
 1. The machine will start and provision itself.  If there's an error and the provisioning doesn't complete, you can type `vagrant provision` to retry the provisioning process.
 1. Get a cup of coffee.  It'll take awhile.
@@ -50,7 +50,38 @@ The NFS root with which you're booting the Pi lives in the image.img file.  You 
 
 The provisioning process in the preceding section has already modified your SD card image to enable NFS booting.  We need to write the boot partition _and not the root partition_ to an SD card.
 
-1. On OSX and Linux: `dd if=image.img of=/dev/rdiskX bs=1m count=<root_offset>`.  The root offset is the same as before.  On my card it is 62914560.
+1. On OSX and Linux: `dd if=image.img of=/dev/rdiskX ibs=512 obs=1m count=<root_offset_sectors>`.  The root offset is the offset of the root partiion from before, but divided by 512.  On my SD card, that number is 122880.
+1. Examine the `cmdline.txt` file in the newly minted SD card.  It assigns the static IP address 10.0.0.101 (which you can change for subsequent cards) and designates 10.0.0.1 as the NFS server.
+
+## NFS boot your Pi
+
+1. Put the card in a Pi, connect it to the hard-wired network, and turn it on.
+1. If this is a fresh card, you'll be dropped into raspi-config.
+  1. Enable ssh in the advanced options
+  1. Do _not_ "expand the filesystem."
+1. Finish raspi-config and reboot.
+
+## Configure the Pi for OpenFrameworks
+
+The virtual machine is set up with the tools to do this automatically. 
+
+1. Type `vagrant ssh` to drop into a shell on your virtual machine.
+1. `cd /opt/ansible`
+1. `source ./hacking/env-setup`
+1. `ssh pi@10.0.0.101` and log in (the password is `raspberry`).  Immediately log back out. We did this to add the host to the known_hosts file.
+1. From the vagrant shell, type `bin/ansible-playbook --ask-pass -i "10.0.0.101," /vagrant/openframeworks-pi.yml` (the password is 'raspberry')  
+1. Another cup of coffee.
+
+## Test it out!
+
+The virtual machine has an alias `rmake` which calls the cross-compiler with the appropriate options.
+1. From your vagrant shell:
+    cd /opt/openframeworks/apps/myApps/emptyExample
+    rmake
+1. From your Raspberry Pi:
+    cd /opt/openframeworks/apps/myApps/emptyExample
+    bin/emptyExample
+
 
 
 

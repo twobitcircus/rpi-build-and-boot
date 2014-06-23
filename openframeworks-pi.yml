@@ -2,55 +2,98 @@
 - hosts: all
   remote_user: pi
   sudo: yes
-  environment:
-    http_proxy: http://10.0.0.1:8888
+  vars:
+    proxy_env:
+      http_proxy: http://10.0.0.1:8888
+      https_proxy: http://10.0.0.1:8888
   tasks:
-
-  
     # this does the equivalent of "install_dependencies.sh"
     - file: path=/etc/apt/sources.list.d/gstreamer.list state=absent
     - apt_repository: repo='deb http://vontaene.de/raspbian-updates/ . main' state=present update_cache=yes
-
+      environment: proxy_env
     - apt: name=libmpg123-dev
+      environment: proxy_env
     - apt: name=alsa-base
+      environment: proxy_env
     - apt: name=alsa-tools
+      environment: proxy_env
     - apt: name=alsa-utils
+      environment: proxy_env
     - apt: name=libupnp-dev
+      environment: proxy_env
     - apt: name=automake
+      environment: proxy_env
     - apt: name=cvs
+      environment: proxy_env
     - apt: name=libavcodec-dev
+      environment: proxy_env
     - apt: name=libavformat-dev
+      environment: proxy_env
     - apt: name=libavutil-dev
+      environment: proxy_env
     - apt: name=libswscale-dev
+      environment: proxy_env
     - apt: name=libasound2-dev
+      environment: proxy_env
     - apt: name=libxmu-dev
+      environment: proxy_env
     - apt: name=libxxf86vm-dev
+      environment: proxy_env
     - apt: name=g++
+      environment: proxy_env
     - apt: name=libgl1-mesa-dev
+      environment: proxy_env
     - apt: name=libglu1-mesa-dev
+      environment: proxy_env
     - apt: name=libraw1394-dev
+      environment: proxy_env
     - apt: name=libudev-dev
+      environment: proxy_env
     - apt: name=libdrm-dev
+      environment: proxy_env
     - apt: name=libglew-dev
+      environment: proxy_env
     - apt: name=libopenal-dev
+      environment: proxy_env
     - apt: name=libsndfile-dev
+      environment: proxy_env
     - apt: name=libfreeimage-dev
+      environment: proxy_env
     - apt: name=libcairo2-dev
+      environment: proxy_env
     - apt: name=libgtk2.0-dev
+      environment: proxy_env
     - apt: name=python-lxml
+      environment: proxy_env
     - apt: name=python-argparse
+      environment: proxy_env
     - apt: name=libfreetype6-dev
+      environment: proxy_env
     - apt: name=libassimp-dev
+      environment: proxy_env
     - apt: name=portaudio19-dev
+      environment: proxy_env
     - apt: name=libssl-dev
+      environment: proxy_env
     - apt: name=libpulse-dev
+      environment: proxy_env
     - apt: name=libgtk2.0-dev
+      environment: proxy_env
     - apt: name=libgstreamer1.0-dev
+      environment: proxy_env
     - apt: name=libgstreamer-plugins-base1.0-dev
+      environment: proxy_env
     - apt: name=gstreamer1.0-pulseaudio
+      environment: proxy_env
     - apt: name=gstreamer1.0-x
+      environment: proxy_env
     - apt: name=gstreamer1.0-plugins-bad
+      environment: proxy_env
     - apt: name=gstreamer1.0-alsa
+      environment: proxy_env
     - apt: name=gstreamer1.0-plugins-base
+      environment: proxy_env
     - apt: name=gstreamer1.0-plugins-good
+      environment: proxy_env
     - apt: name=1.0-omx
+      environment: proxy_env
