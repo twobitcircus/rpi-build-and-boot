@@ -29,10 +29,7 @@ The magic comes when you're building a cluster of Raspberry Pis.  There's no nee
 ## Other Dependencies
 
 1. Clone this repository and cd into it.
-1. Download your preferred Raspberry Pi SD card image.  I'm using [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest).  Unzip it, and symlink it to `image.img`.
-
-    ln -s 2014-06-20-wheezy-raspbian.img image.img
-
+1. Download your preferred Raspberry Pi SD card image.  I'm using [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest).  Unzip it, and symlink it with `ln -s 2014-06-20-wheezy-raspbian.img image.img`
 1. Download a zip file of the Raspberry Pi [cross-compiler tools](https://github.com/raspberrypi/tools/archive/master.zip).  Make sure the zip file is named `tools-master.zip`.  Leave it compressed.
 1. Download [OpenFrameworks for armv6](http://www.openframeworks.cc/versions/v0.8.1/of_v0.8.1_linuxarmv6l_release.tar.gz).  Leave it compressed.
 
@@ -79,12 +76,12 @@ The virtual machine is set up with the tools to do this automatically.
 
 The virtual machine has an alias `rmake` which calls the cross-compiler with the appropriate options.
 
-1. From your vagrant shell:
+From your vagrant shell:
 
     cd /opt/openframeworks/apps/myApps/emptyExample
     rmake
 
-1. From your Raspberry Pi:
+From your Raspberry Pi:
 
     cd /opt/openframeworks/apps/myApps/emptyExample
     bin/emptyExample
