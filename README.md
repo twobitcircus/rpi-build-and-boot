@@ -27,6 +27,7 @@ The magic comes when you're building a cluster of Raspberry Pis.  There's no nee
 1. Install [Ansible](http://ansible.com).  I used pip.
 
 ## Other Dependencies
+
 1. Clone this repository and cd into it.
 1. Download your preferred Raspberry Pi SD card image.  I'm using [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest).  Unzip it, and symlink it to `image.img`.
 
@@ -77,6 +78,7 @@ The virtual machine is set up with the tools to do this automatically.
 ## Test it out!
 
 The virtual machine has an alias `rmake` which calls the cross-compiler with the appropriate options.
+
 1. From your vagrant shell:
 
     cd /opt/openframeworks/apps/myApps/emptyExample
@@ -86,6 +88,7 @@ The virtual machine has an alias `rmake` which calls the cross-compiler with the
 
     cd /opt/openframeworks/apps/myApps/emptyExample
     bin/emptyExample
+
 
 
 
