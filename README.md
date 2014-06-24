@@ -69,7 +69,7 @@ The virtual machine is set up with the tools to do this automatically.
 
 1. Type `vagrant ssh` to drop into a shell on your virtual machine.
 1. `ssh pi@10.0.0.101` and log in (the password is `raspberry`).  Immediately log back out. We did this to add the host to the known_hosts file.
-1. From the vagrant shell, type `ansible-playbook --ask-pass -i "10.0.0.101," /vagrant/openframeworks-pi.yml` (the password is 'raspberry').  _Note: I may have gone overboard here.  This does the same as running install_dependencies.sh on the Raspberry Pi from /opt/openframeworks/scripts/linux/linux_armv6l
+1. From the vagrant shell, type `ansible-playbook --ask-pass -i "10.0.0.101," /vagrant/openframeworks-pi.yml` (the password is 'raspberry').  *Note: I may have gone overboard here.  This does the same as running install_dependencies.sh on the Raspberry Pi from /opt/openframeworks/scripts/linux/linux_armv6l.  If you go this route, there's an http_proxy running at http://10.0.0.1:8888*  
 1. Another cup of coffee.
 
 ## Test it out!
@@ -99,6 +99,7 @@ Want to run a network of Raspberry Pis all with the same codebase, or with acces
 Are you finished developing and want to flash a stand-alone SD card that doesn't require NFS booting?  Simply `dd` the _entire_ image.img file to an SD card.  You've been editing that image all along!  
 
 There's some things you'll have to do first:
+
 1. On the Raspberry Pi _root_ partition, alter /etc/fstab and restore the mount point for /
 1. On the Raspberry Pi _boot_ partition, remove the stuff after "rootwait"
 
