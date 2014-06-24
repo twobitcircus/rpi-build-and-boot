@@ -41,7 +41,8 @@
 
     - command: /vagrant/fixQualifiedLibraryPaths.sh /opt/raspberrypi/root /opt/raspberrypi/tools-master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++
 
-    - git: repo=https://github.com/ansible/ansible.git dest=/opt/ansible
+    - apt: name=python-dev
+    - pip: name=ansible
     - apt: name=sshpass
     - pip: name=paramiko
     - pip: name=PyYAML
