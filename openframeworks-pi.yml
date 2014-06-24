@@ -95,5 +95,3 @@
       environment: proxy_env
     - apt: name=gstreamer1.0-plugins-good force=yes
       environment: proxy_env
-    - apt: name=1.0-omx force=yes
-      environment: proxy_env
