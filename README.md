@@ -6,9 +6,13 @@ This package uses Vagrant and Ansible to spin up a virtual machine that runs on 
 - NFS boots one or more Raspberry Pis.  The root partition is loop-mounted from a .img file, so you can later dd it to an SD card for disconnected operation.
 - Is ready to cross-compile OpenFrameworks applications and run them on a cluster of Raspberry Pis.
 
+You won't have to do any of the things on [the Raspberry Pi Cross-Compiling Guide](http://www.openframeworks.cc/setup/raspberrypi/Raspberry-Pi-Cross-compiling-guide.html) page.  I have contributed to that guide to make the process more smooth, but it's still a mess.
+
 ## Why cross-compile?
 
 The Raspberry Pi is slow.  This environment will let you compile OpenFrameworks applications on your fast desktop.
+
+It's worth mentioning that although I've built this vm with OpenFrameworks in mind, it'll work just fine for any cross-compiling task.
 
 ## Why NFS-boot?
 
