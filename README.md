@@ -48,10 +48,12 @@ The NFS root with which you're booting the Pi lives in the image.img file.  You 
 
 ## Make a bootable card
 
-The provisioning process in the preceding section has already modified your SD card image to enable NFS booting.  We need to write the boot partition _and not the root partition_ to an SD card.
+The provisioning process in the preceding section has already modified your SD card image to enable NFS booting.  We need to write the boot partition _and not the root partition_ to an SD card.  Insert an SD card into your computer.  It can be tiny.  We're only writing about 60MB to it.
 
-1. On OSX and Linux: `dd if=image.img of=/dev/rdiskX ibs=512 obs=1m count=<root_offset_sectors>`.  The root offset is the offset of the root partiion from before, but divided by 512.  On my SD card, that number is 122880.
-1. Examine the `cmdline.txt` file in the newly minted SD card.  It assigns the static IP address 10.0.0.101 (which you can change for subsequent cards) and designates 10.0.0.1 as the NFS server.
+1. On OSX and Linux: `dd if=image.img of=/dev/rdiskX ibs=512 obs=1m count=<root_offset_sectors>`.  The root offset is the offset of the root partiion from before, but divided by 512.  On my SD card, that number is 122880.  This particular incantation only copies the first partition (the boot partition) to the SD card.  We don't want a root partition on this card, because it'll be using the NFS share.
+1. Examine the `cmdline.txt` file in the newly minted SD card.  It assigns the static IP address 10.0.0.101 (which you can change for subsequent cards) and designates 10.0.0.1 as the NFS server
+
+It's worth noting that the ansible provisioning process has already altered the /etc/fstab on the root partition on the SD card image to inhibit mounting the root partition from the SD card.
 
 ## NFS boot your Pi
 
