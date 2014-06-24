@@ -79,21 +79,21 @@
       environment: proxy_env
     - apt: name=libgtk2.0-dev
       environment: proxy_env
-    - apt: name=libgstreamer1.0-dev
+    - apt: name=libgstreamer1.0-dev force=yes
       environment: proxy_env
-    - apt: name=libgstreamer-plugins-base1.0-dev
+    - apt: name=libgstreamer-plugins-base1.0-dev force=yes
       environment: proxy_env
-    - apt: name=gstreamer1.0-pulseaudio
+    - apt: name=gstreamer1.0-pulseaudio force=yes
       environment: proxy_env
-    - apt: name=gstreamer1.0-x
+    - apt: name=gstreamer1.0-x force=yes
       environment: proxy_env
-    - apt: name=gstreamer1.0-plugins-bad
+    - apt: name=gstreamer1.0-plugins-bad force=yes
       environment: proxy_env
-    - apt: name=gstreamer1.0-alsa
+    - apt: name=gstreamer1.0-alsa force=yes
       environment: proxy_env
-    - apt: name=gstreamer1.0-plugins-base
+    - apt: name=gstreamer1.0-plugins-base force=yes
       environment: proxy_env
-    - apt: name=gstreamer1.0-plugins-good
+    - apt: name=gstreamer1.0-plugins-good force=yes
       environment: proxy_env
-    - apt: name=1.0-omx
+    - apt: name=1.0-omx force=yes
       environment: proxy_env
