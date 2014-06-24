@@ -68,13 +68,13 @@ It's worth noting that the ansible provisioning process has already altered the 
 The virtual machine is set up with the tools to do this automatically. 
 
 1. Type `vagrant ssh` to drop into a shell on your virtual machine.
-1. `cd /opt/ansible`
-1. `source ./hacking/env-setup`
 1. `ssh pi@10.0.0.101` and log in (the password is `raspberry`).  Immediately log back out. We did this to add the host to the known_hosts file.
-1. From the vagrant shell, type `bin/ansible-playbook --ask-pass -i "10.0.0.101," /vagrant/openframeworks-pi.yml` (the password is 'raspberry')  
+1. From the vagrant shell, type `ansible-playbook --ask-pass -i "10.0.0.101," /vagrant/openframeworks-pi.yml` (the password is 'raspberry')  
 1. Another cup of coffee.
 
 ## Test it out!
+
+When you're ssh'ed into your virtual machine, you can access the root partition in /opt/raspberrypi/root.  Dig deeper, and you'll find /opt/raspberrypi/root/opt/openframeworks.  This is the armv6 OpenFrameworks directory, uncompressed and ready to go.  It's symlinked to /opt/openframeworks for simplicity.
 
 The virtual machine has an alias `rmake` which calls the cross-compiler with the appropriate options.
 
@@ -88,8 +88,23 @@ From your Raspberry Pi:
     cd /opt/openframeworks/apps/myApps/emptyExample
     bin/emptyExample
 
+# Here's where it gets interesting
 
+Big deal, right?  Well, consider what you can do with this development environment.
 
+## Many Raspberry Pis
+Want to run a network of Raspberry Pis all with the same codebase, or with access to the same shared media?  Flash some more SD cards.  Change `cmdline.txt` to set a different IP address for each.  They'll all boot up and have access to that same root partition.
+
+## Standalone Raspberry Pi
+Are you finished developing and want to flash a stand-alone SD card that doesn't require NFS booting?  Simply `dd` the _entire_ image.img file to an SD card.  You've been editing that image all along!  
+
+There's some things you'll have to do first:
+1. On the Raspberry Pi _root_ partition, alter /etc/fstab and restore the mount point for /
+1. On the Raspberry Pi _boot_ partition, remove the stuff after "rootwait"
+
+## Simultaneously develop on your desktop and the Raspberry Pi
+
+If you put an OpenFrameworks project in the rpi-build-and-boot directory, and change config.make to point the OpenFrameworks root at /opt/openframeworks, you can compile in XCode on the Mac side AND compile from the /vagrant directory.
 
 
 
