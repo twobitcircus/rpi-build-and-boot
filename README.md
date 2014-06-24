@@ -1,18 +1,20 @@
 # Introduction
 
-This package uses Vagrant and Ansible to spin up a virtual machine that runs on Mac, Linux, or Windows.  In less than five minutes, you'll have an environment that:
+This package uses Vagrant and Ansible to spin up a virtual machine that runs on Mac, Linux, or Windows(?).  In no time at all, you'll have an environment that:
 
 - Cross-compiles for the Raspberry Pi armv6l architecture.
-- NFS boots one or more Raspberry Pis.  The root partition is loop-mounted from a .img file, so you can later dd it to an SD card for disconnected operation.
+- NFS boots one or more Raspberry Pis.  The root partition is loop-mounted from a .img file, so you can later dd it to an SD card for standalone operation.
 - Is ready to cross-compile OpenFrameworks applications and run them on a cluster of Raspberry Pis.
 
 You won't have to do any of the things on [the Raspberry Pi Cross-Compiling Guide](http://www.openframeworks.cc/setup/raspberrypi/Raspberry-Pi-Cross-compiling-guide.html) page.  I have contributed to that guide to make the process more smooth, but it's still a mess.
+
+Here, Vagrant automates the process of setting up a Virtualbox virtual machine and Ansible automates the process of setting up the cross-compiler, the NFS server, and OpenFrameworks.
 
 ## Why cross-compile?
 
 The Raspberry Pi is slow.  This environment will let you compile OpenFrameworks applications on your fast desktop.
 
-It's worth mentioning that although I've built this vm with OpenFrameworks in mind, it'll work just fine for any cross-compiling task.
+Though I built this virtual machine with OpenFrameworks in mind, it'll work just fine for any cross-compiling task.
 
 ## Why NFS-boot?
 
