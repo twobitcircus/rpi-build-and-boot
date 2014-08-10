@@ -37,7 +37,7 @@ The magic comes when you're building a cluster of Raspberry Pis.  There's no nee
 1. Clone this repository and cd into it.
 1. Download your preferred Raspberry Pi SD card image.  I'm using [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest).  Unzip it, and symlink it with `ln -s 2014-06-20-wheezy-raspbian.img image.img`
 1. Download a zip file of the Raspberry Pi [cross-compiler tools](https://github.com/raspberrypi/tools/archive/master.zip).  Make sure the zip file is named `tools-master.zip`.  Leave it compressed.
-1. Download [OpenFrameworks for armv6](http://www.openframeworks.cc/versions/v0.8.1/of_v0.8.1_linuxarmv6l_release.tar.gz).  Leave it compressed.
+1. Download [OpenFrameworks for armv6](http://www.openframeworks.cc/versions/v0.8.3/of_v0.8.3_linuxarmv6l_release.tar.gz).  Leave it compressed.
 
 ## Get the image ready
 _You only have to do this if you're not using 2014-06-20-wheezy-raspbian._
