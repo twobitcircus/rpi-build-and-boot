@@ -50,10 +50,10 @@
     - pip: name=httplib2
 
 
-    - unarchive: src=of_v0.8.3_linuxarmv6l_release.tar.gz dest=/opt/raspberrypi/root/opt creates=/opt/raspberrypi/root/opt/of_v0.8.3_linuxarmv6l_release
-    - file: src=of_v0.8.3_linuxarmv6l_release dest=/opt/raspberrypi/root/opt/openframeworks state=link
+    - unarchive: src=of_v0.8.4_linuxarmv6l_release.tar.gz dest=/opt/raspberrypi/root/opt creates=/opt/raspberrypi/root/opt/of_v0.8.4_linuxarmv6l_release
+    - file: src=of_v0.8.4_linuxarmv6l_release dest=/opt/raspberrypi/root/opt/openframeworks state=link
     - file: src=/opt/raspberrypi/root/opt/openframeworks dest=/opt/openframeworks state=link
-    - command: chown -R vagrant /opt/raspberrypi/root/opt/of_v0.8.3_linuxarmv6l_release
+    - command: chown -R vagrant /opt/raspberrypi/root/opt/of_v0.8.4_linuxarmv6l_release
 
     - apt: name=tinyproxy
     - lineinfile: dest="/etc/tinyproxy.conf" line="Allow 10.0.0.0/8"
