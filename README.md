@@ -94,6 +94,8 @@ From your Raspberry Pi:
     cd /opt/openframeworks/apps/myApps/emptyExample
     bin/emptyExample
 
+Note: If you find yourself running out of room you might consider removing several large packages that are installed by default on the [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest) with the command `apt-get remove wolfram-engine squeak-vm scratch`.
+
 # Here's where it gets interesting
 
 Big deal, right?  Well, consider what you can do with this development environment.
