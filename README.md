@@ -94,7 +94,7 @@ From your Raspberry Pi:
     cd /opt/openframeworks/apps/myApps/emptyExample
     bin/emptyExample
 
-Note: If you find yourself running out of disk space you might consider removing several large packages that are installed by default on the [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest) image.  To do this, ssh into the pi (`vagrant ssh` and then `ssh pi@10.0.0.101`) and then issue the command `sudo apt-get remove wolfram-engine squeak-vm scratch && sudo apt-get autoremove`.  This should free up about 500MB.
+Note: If you find yourself running out of disk space you might consider removing several large packages that are installed by default on the [2014-06-20-wheezy-raspbian](http://downloads.raspberrypi.org/raspbian_latest) image.  To do this, ssh into the pi (`vagrant ssh` and then `ssh pi@10.0.0.101`) and then issue the command `sudo apt-get remove wolfram-engine squeak-vm scratch`.  This should free up about 500MB.
 
 # Here's where it gets interesting
 
