@@ -3,10 +3,12 @@
   remote_user: vagrant
   sudo: yes
   vars:
+    of_version: of_v0.9.0_linuxarmv7l_release
+    image: 2015-09-24-raspbian-jessie.img
     offset_boot: 4194304
     offset_root: 62914560
   tasks:
-    - apt: upgrade=dist
+    #- apt: upgrade=dist update_cache=yes
     - command: mkdir -p /opt/raspberrypi creates=/opt/raspberrypi
 
     - apt: name=nfs-kernel-server
@@ -18,46 +20,86 @@
     - apt: name=pkg-config
     - apt: name=git
     - apt: name=python-pip
-
-
-    - apt: name=unzip
-    - unarchive: src=tools-master.zip dest=/opt/raspberrypi creates=/opt/raspberrypi/tools-master
-
-    - file: path=/opt/raspberrypi/boot state=directory
-    - file: path=/opt/raspberrypi/root state=directory
-
-    - mount: src="/vagrant/image.img" name="/opt/raspberrypi/boot" fstype="auto"  opts="loop,offset={{offset_boot}},noauto" state="mounted"
-    - mount: src="/vagrant/image.img" name="/opt/raspberrypi/root" fstype="auto"  opts="loop,offset={{offset_root}},noauto" state="mounted"
-
-    # the pi is unbootable unless it is told not to mount the root filesystem from the card!
-    - lineinfile: dest=/opt/raspberrypi/root/etc/fstab regexp="^\/dev\/mmcblk0p2" state="absent"
-    - replace: dest=/opt/raspberrypi/boot/cmdline.txt regexp="rootwait$" replace="rootwait ip=10.0.0.101:10.0.0.1:10.0.0.1:255.255.255.0:rpi:eth0:off root=/dev/nfs rootfstype=nfs nfsroot=10.0.0.1:/opt/raspberrypi/root,udp,vers=3 smsc95xx.turbo_mode=N" backup=no
-
-    # build helpies
-    - lineinfile: dest="/home/vagrant/.bashrc" line="export RPI_TOOLS=/opt/raspberrypi/tools-master"
-    - lineinfile: dest="/home/vagrant/.bashrc" line="export RPI_ROOT=/opt/raspberrypi/root"
-    - lineinfile: dest="/home/vagrant/.bashrc" line="export PKG_CONFIG_PATH=$RPI_ROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$RPI_ROOT/usr/share/pkgconfig:$RPI_ROOT/usr/lib/pkgconfig"
-    - lineinfile: dest="/home/vagrant/.bashrc" line="alias rmake='make RPI_TOOLS=$RPI_TOOLS RPI_ROOT=$RPI_ROOT GST_VERSION=1.0 PLATFORM_OS=Linux PLATFORM_ARCH=armv6l'"
-
-    - command: /vagrant/fixQualifiedLibraryPaths.sh /opt/raspberrypi/root /opt/raspberrypi/tools-master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++
-
     - apt: name=python-dev
-    - pip: name=ansible
+    - apt: name=unzip
+    - apt: name=gawk
+    - apt: name=libudev-dev
+
     - apt: name=sshpass
+
+    - pip: name=ansible
     - pip: name=paramiko
     - pip: name=PyYAML
     - pip: name=jinja2
     - pip: name=httplib2
 
-
-    - unarchive: src=of_v0.8.1_linuxarmv6l_release.tar.gz dest=/opt/raspberrypi/root/opt creates=/opt/raspberrypi/root/opt/of_v0.8.1_linuxarmv6l_release
-    - file: src=of_v0.8.1_linuxarmv6l_release dest=/opt/raspberrypi/root/opt/openframeworks state=link
-    - file: src=/opt/raspberrypi/root/opt/openframeworks dest=/opt/openframeworks state=link
-    - command: chown -R vagrant /opt/raspberrypi/root/opt/of_v0.8.1_linuxarmv6l_release
-
     - apt: name=tinyproxy
     - lineinfile: dest="/etc/tinyproxy.conf" line="Allow 10.0.0.0/8"
     - service: name=tinyproxy state=restarted
+
+
+    - file: path=/opt/raspberrypi/boot state=directory
+    - file: path=/opt/raspberrypi/root state=directory
+
+    - mount: src="/vagrant/{{image}}" name="/opt/raspberrypi/boot" fstype="auto"  opts="loop,offset={{offset_boot}},noauto" state="mounted"
+    - mount: src="/vagrant/{{image}}" name="/opt/raspberrypi/root" fstype="auto"  opts="loop,offset={{offset_root}},noauto" state="mounted"
+    - lineinfile: dest=/etc/rc.local line="mount /opt/raspberrypi/root" insertbefore="exit 0"
+    - lineinfile: dest=/etc/rc.local line="mount /opt/raspberrypi/boot" insertbefore="exit 0"
+
+    # the pi is unbootable unless it is told not to mount the root filesystem from the card!
+    - lineinfile: dest=/opt/raspberrypi/root/etc/fstab regexp="^\/dev\/mmcblk0p2" state="absent"
+    - replace: dest=/opt/raspberrypi/boot/cmdline.txt regexp="rootwait$" replace="dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 elevator=deadline root=/dev/nfs rootfstype=nfs nfsroot=10.0.0.1:/opt/raspberrypi/root,udp,vers=3 rw fsck.repair=no rootwait ip=10.0.0.101:10.0.0.1:10.0.0.1:255.255.255.0:rpi:eth0:off smsc95xx.turbo_mode=N" backup=no
+
+    # build helpies
+    #- file: path=/opt/RPI_BUILD_ROOT state=directory
+    #- file: src=/opt/raspberrypi/root/etc dest=/opt/RPI_BUILD_ROOT/etc state=link
+    #- file: src=/opt/raspberrypi/root/lib dest=/opt/RPI_BUILD_ROOT/lib state=link
+    #- file: src=/opt/raspberrypi/root/opt dest=/opt/RPI_BUILD_ROOT/opt state=link
+    #- command: rsync -avz /opt/raspberrypi/root/usr/ /opt/RPI_BUILD_ROOT/usr
+
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libanl.so.1           dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libanl.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libBrokenLocale.so.1  dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libBrokenLocale.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libcidn.so.1          dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libcidn.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libcrypt.so.1         dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libcrypt.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libdbus-1.so.3.8.13   dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libdbus-1.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libdl.so.2            dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libdl.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libexpat.so.1.6.0     dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libexpat.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libglib-2.0.so.0      dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libglib-2.0.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/liblzma.so.5.0.0      dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/liblzma.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libm.so.6             dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libm.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnsl.so.1           dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnsl.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnss_compat.so.2    dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnss_compat.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnss_dns.so.2       dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnss_dns.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnss_files.so.2     dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnss_files.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnss_hesiod.so.2    dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnss_hesiod.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnss_nisplus.so.2   dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnss_nisplus.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libnss_nis.so.2       dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libnss_nis.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libpcre.so.3          dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libpcre.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libpng12.so.0         dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libpng12.so.0 state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libresolv.so.2        dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libresolv.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libthread_db.so.1     dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libthread_db.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libusb-0.1.so.4       dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libusb-0.1.so.4 state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libusb-1.0.so.0.1.0   dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libusb-1.0.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libutil.so.1          dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libutil.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libz.so.1.2.8         dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libz.so state=link
+    - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libudev.so.1.5.0      dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libudev.so state=link
+
+    - file: path=/tmp/CROSS_BUILD_TOOLS state=directory
+    - copy: src=build_cross_gcc.sh dest=/tmp/CROSS_BUILD_TOOLS/build_cross_gcc.sh mode=0744
+    - shell: /tmp/CROSS_BUILD_TOOLS/build_cross_gcc.sh chdir=/tmp/CROSS_BUILD_TOOLS creates=/opt/cross/bin/arm-linux-gnueabihf-g++
+
+    - lineinfile: dest="/home/vagrant/.bash_profile" line="export GST_VERSION=1.0"
+    - lineinfile: dest="/home/vagrant/.bash_profile" line="export RPI_ROOT=/opt/raspberrypi/root"
+    #- lineinfile: dest="/home/vagrant/.bash_profile" line="export RPI_BUILD_ROOT=/opt/RPI_BUILD_ROOT"
+    - lineinfile: dest="/home/vagrant/.bash_profile" line="export TOOLCHAIN_ROOT=/opt/cross/bin"
+    - lineinfile: dest="/home/vagrant/.bash_profile" line="export PLATFORM_OS=Linux"
+    - lineinfile: dest="/home/vagrant/.bash_profile" line="export PLATFORM_ARCH=armv7l"
+    - lineinfile: dest="/home/vagrant/.bash_profile" line="export PKG_CONFIG_PATH=$RPI_ROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$RPI_ROOT/usr/share/pkgconfig:$RPI_ROOT/usr/lib/pkgconfig"
+    
+    - unarchive: src={{of_version}}.tar.gz dest=/opt/raspberrypi/root/opt creates=/opt/raspberrypi/root/opt/{{of_version}}
+    - file: src={{of_version}} dest=/opt/raspberrypi/root/opt/openframeworks state=link
+    - file: src=/opt/raspberrypi/root/opt/openframeworks dest=/opt/openframeworks state=link
+    - command: chown -R vagrant /opt/raspberrypi/root/opt/{{of_version}}
 
   handlers:
 
