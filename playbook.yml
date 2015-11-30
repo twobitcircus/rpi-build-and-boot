@@ -51,11 +51,11 @@
     - replace: dest=/opt/raspberrypi/boot/cmdline.txt regexp="rootwait$" replace="dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 elevator=deadline root=/dev/nfs rootfstype=nfs nfsroot=10.0.0.1:/opt/raspberrypi/root,udp,vers=3 rw fsck.repair=no rootwait ip=10.0.0.101:10.0.0.1:10.0.0.1:255.255.255.0:rpi:eth0:off smsc95xx.turbo_mode=N" backup=no
 
     # build helpies
-    #- file: path=/opt/RPI_BUILD_ROOT state=directory
-    #- file: src=/opt/raspberrypi/root/etc dest=/opt/RPI_BUILD_ROOT/etc state=link
-    #- file: src=/opt/raspberrypi/root/lib dest=/opt/RPI_BUILD_ROOT/lib state=link
-    #- file: src=/opt/raspberrypi/root/opt dest=/opt/RPI_BUILD_ROOT/opt state=link
-    #- command: rsync -avz /opt/raspberrypi/root/usr/ /opt/RPI_BUILD_ROOT/usr
+    - file: path=/opt/RPI_BUILD_ROOT state=directory
+    - file: src=/opt/raspberrypi/root/etc dest=/opt/RPI_BUILD_ROOT/etc state=link
+    - file: src=/opt/raspberrypi/root/lib dest=/opt/RPI_BUILD_ROOT/lib state=link
+    - file: src=/opt/raspberrypi/root/opt dest=/opt/RPI_BUILD_ROOT/opt state=link
+    - command: rsync -avz /opt/raspberrypi/root/usr/ /opt/RPI_BUILD_ROOT/usr
 
     - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libanl.so.1           dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libanl.so state=link
     - file: src=/opt/raspberrypi/root/lib/arm-linux-gnueabihf/libBrokenLocale.so.1  dest=/opt/raspberrypi/root/usr/lib/arm-linux-gnueabihf/libBrokenLocale.so state=link
