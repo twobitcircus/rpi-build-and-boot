@@ -113,3 +113,7 @@ There's some things you'll have to do first:
 ## Simultaneously develop on your desktop and the Raspberry Pi
 
 If you put an OpenFrameworks project in the rpi-build-and-boot directory, and change config.make to point the OpenFrameworks root at /opt/openframeworks, you can compile in XCode on the Mac side AND compile from the /vagrant directory.
+
+### Notes ###
+
+- *HACK* I create a file in `/etc/cron.d` that tries to mount `/opt/raspberrypi/root` every minute.  I tried to make an upstart job, but upstart is... difficult.
