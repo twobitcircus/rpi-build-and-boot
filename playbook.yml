@@ -8,11 +8,13 @@
     offset_boot: 4194304
     offset_root: 62914560
   tasks:
-    #- apt: upgrade=dist update_cache=yes
+    - apt: upgrade=dist update_cache=yes
     - command: mkdir -p /opt/raspberrypi creates=/opt/raspberrypi
 
     - apt: name=nfs-kernel-server
     - lineinfile: dest=/etc/exports line="/opt/raspberrypi/root 10.0.0.0/24(rw,sync,no_root_squash,no_subtree_check)"
+
+    - lineinfile: dest=/etc/cron.d/opt_raspberrypi_root line="* * * * * root /bin/mount /opt/raspberrypi/root" create=yes
 
     - service: name=nfs-kernel-server state=restarted
 
